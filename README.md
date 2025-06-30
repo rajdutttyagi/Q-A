@@ -56,23 +56,37 @@ Groq – LLM inference (transform, generate, validate)
 
 🧠 Architecture Overview
 
-[PDF/Images] → Extract (text, tables, images)
-     ↓
- Captioning + Embedding → ChromaDB vector store
-     ↓
-[User Query] → Classifier (LLM): Retrieval vs Fallback
-     ↓
-  ┌────────────┐        ┌──────────────────────────┐
-  │ Retrieval  │        │  Web Search Fallback     │
-  │ (ChromaDB) │        └──────────────────────────┘
-  └────────────┘               ↓
-       ↓                 Contextual Retrieval
-Query + Context → LLM (Groq):
-  • Reformulate query  
-  • Generate answer  
-  • Validate output  
-       ↓
-   API Response → JSON / UI
+[PDF / Images]
+      ↓
+Extract (text, tables, images) using PyMuPDF
+      ↓
+Image Captioning + Embedding (sentence-transformers / vision models)
+      ↓
+ChromaDB Vector Store
+      ↓
+[User Query]
+      ↓
+Query Classifier (LLM via Groq):
+  → Retrieval (Vector DB)
+  → Web Search Fallback (if needed)
+      ↓
+ ┌────────────────────┐        ┌──────────────────────────┐
+ │   Retrieval Path   │        │   Web Search Fallback    │
+ │   (via ChromaDB)   │        └──────────────────────────┘
+ └────────────────────┘
+      ↓
+Contextual Retrieval
+      ↓
+LLM Pipeline (Groq):
+
+  • Reformulate Query  
+  • Generate Answer  
+  • Validate & Filter (Hallucination Check)
+      ↓
+[Final Output]
+
+→ API / UI Response (JSON)
+
 
 🛠️ Customization Tips
 
